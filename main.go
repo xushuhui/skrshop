@@ -1,16 +1,19 @@
 package main
 
 import (
+	"os"
+	"os/signal"
 	"skrshop-api/core"
-	"skrshop-api/model"
 	"skrshop-api/route"
+	"syscall"
 )
 
 func main() {
-	r := route.InitRouter()
+	core.StartModule()
 
-	model.InitDB()
-	_ = core.InitRedis()
-	core.InitValidate()
-	r.Run(core.HTTPPort)
+	route.HttpServerRun()
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGKILL, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	route.HttpServerStop()
 }

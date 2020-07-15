@@ -1,50 +1,40 @@
 package middleware
 
 import (
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
-	"skrshop-api/api"
+	cd "skrshop-api/code"
 	"skrshop-api/core"
+	"skrshop-api/utils"
 	"time"
 )
 
-func AuthMiddleware() *jwt.GinJWTMiddleware {
-	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
-		Realm:         "Realmname",
-		Key:           []byte("Secretkey"),
-		Timeout:       time.Hour * 12,
-		MaxRefresh:    time.Hour * 24,
-		Authenticator: api.Login,
-		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			return jwt.MapClaims{
-				jwt.IdentityKey: data,
-			}
-
-		},
-		Unauthorized:  jwtUnAuthFunc,
-		LoginResponse: loginResponse,
-
-		// 其他默认
-	})
-	if err != nil {
-		return nil
-	}
-	return authMiddleware
-
-}
-
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		claims := jwt.ExtractClaims(c)
+		var code int
 
-		m := claims[jwt.IdentityKey]
-		token := m.(map[string]interface{})
+		code = 0
+		token := c.Query("token")
+		if token == "" {
+			code = cd.InvalidParams
+		} else {
+			claims, err := utils.ParseToken(token)
+			if err != nil {
+				code = cd.ErrorAuthToken
+			} else if time.Now().Unix() > claims.ExpiresAt {
+				code = cd.TimeoutAuthToken
+			}
+		}
 
-		c.Set("uid", token["uid"])
-		//_ = utils.MapToStruct(claims, &token)
+		if code != 0 {
+			core.FailResp(c, code)
+			return
+		}
+
 		c.Next()
 	}
+
 }
+
 func jwtUnAuthFunc(c *gin.Context, code int, message string) {
 	c.JSON(code, gin.H{
 		"code":    code,
