@@ -6,5 +6,6 @@ const (
 	AuthCheckTokenFail
 	AuthCheckTokenTimeout
 	ErrorAuthToken
+	TimeoutAuthToken
 	ErrorPassWord
 )

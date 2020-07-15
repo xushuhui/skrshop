@@ -4,13 +4,19 @@ import (
 	"github.com/go-ini/ini"
 	"log"
 	"skrshop-api/utils"
+	"time"
 )
 
 var (
-	Cfg       *ini.File
-	RunMode   string
-	HTTPPort  string
-	JwtSecret string
+	Cfg *ini.File
+
+	RunMode string
+
+	HTTPPort string
+
+	JwtSecret    string
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
 )
 
 func init() {
@@ -27,6 +33,7 @@ func init() {
 
 func LoadBase() {
 	RunMode = Cfg.Section("").Key("RUN_MODE").MustString("debug")
+
 }
 
 func LoadServer() {
@@ -37,6 +44,9 @@ func LoadServer() {
 
 	port := sec.Key("HTTP_PORT").MustInt(8000)
 	HTTPPort = ":" + utils.IntToString(port)
+	ReadTimeout = time.Duration(sec.Key("READ_TIMEOUT").MustInt(60)) * time.Second
+	WriteTimeout = time.Duration(sec.Key("WRITE_TIMEOUT").MustInt(60)) * time.Second
+
 }
 
 func LoadApp() {
@@ -46,4 +56,5 @@ func LoadApp() {
 	}
 
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
+
 }
