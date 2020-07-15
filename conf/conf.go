@@ -1,4 +1,4 @@
-package core
+package conf
 
 import (
 	"github.com/go-ini/ini"
@@ -14,9 +14,13 @@ var (
 
 	HTTPPort string
 
-	JwtSecret    string
-	ReadTimeout  time.Duration
-	WriteTimeout time.Duration
+	JwtSecret     string
+	ReadTimeout   time.Duration
+	WriteTimeout  time.Duration
+	DBType        string
+	DBSource      string
+	RedisHost     string
+	RedisPassword string
 )
 
 func init() {
@@ -26,17 +30,18 @@ func init() {
 		log.Fatalf("Fail to parse 'conf/app.ini': %v", err)
 	}
 
-	LoadBase()
-	LoadServer()
-	LoadApp()
+	loadBase()
+	loadServer()
+	loadApp()
+	loadDB()
 }
 
-func LoadBase() {
+func loadBase() {
 	RunMode = Cfg.Section("").Key("RUN_MODE").MustString("debug")
 
 }
 
-func LoadServer() {
+func loadServer() {
 	sec, err := Cfg.GetSection("server")
 	if err != nil {
 		log.Fatalf("Fail to get section 'server': %v", err)
@@ -49,12 +54,26 @@ func LoadServer() {
 
 }
 
-func LoadApp() {
+func loadApp() {
 	sec, err := Cfg.GetSection("app")
 	if err != nil {
 		log.Fatalf("Fail to get section 'app': %v", err)
 	}
-
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
-
+}
+func loadDB() {
+	sec, err := Cfg.GetSection("database")
+	if err != nil {
+		log.Fatalf("Fail to get section 'database': %v", err)
+	}
+	DBType = sec.Key("TYPE").MustString("mysql")
+	DBSource = sec.Key("SOURCE").MustString("")
+}
+func loadRedis() {
+	sec, err := Cfg.GetSection("redis")
+	if err != nil {
+		log.Fatalf("Fail to get section 'redis': %v", err)
+	}
+	RedisHost = sec.Key("HOST").MustString("127.0.0.1:6379")
+	RedisPassword = sec.Key("PASSWORD").MustString("")
 }

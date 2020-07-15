@@ -43,11 +43,9 @@ func GetStaffInfoOne(where string, args ...interface{}) (staffInfo *StaffInfo, e
 	err = DB.Model(staffInfo).First(&staffInfo, where, args).Error
 	return
 }
-func GetStaffInfoPage(page, limit int64) (list []StaffInfo) {
-	err := DB.Limit(limit).Offset((page - 1) * limit).Find(&list).GetErrors()
-	if len(err) > 0 {
-		return nil
-	}
+func GetStaffInfoPage(page, limit int64) (list []StaffInfo, err error) {
+	err = DB.Limit(limit).Offset((page - 1) * limit).Find(&list).Error
+
 	return
 }
 

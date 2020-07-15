@@ -38,10 +38,7 @@ func GetProductBrandsById(id string) (productBrands ProductBrands, err error) {
 }
 
 func GetProductBrandsOne(where string, condition ...interface{}) (productBrands ProductBrands, err error) {
-	errs := DB.First(productBrands, where, condition).GetErrors()
-	if len(errs) > 0 {
-		return
-	}
+	err = DB.First(&productBrands, where, condition).Error
 	return
 }
 

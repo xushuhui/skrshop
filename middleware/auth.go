@@ -10,40 +10,24 @@ import (
 
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var code int
+		Authorization := c.Request.Header.Get("Authorization")
 
-		code = 0
-		token := c.Query("token")
-		if token == "" {
-			code = cd.InvalidParams
-		} else {
-			claims, err := utils.ParseToken(token)
-			if err != nil {
-				code = cd.ErrorAuthToken
-			} else if time.Now().Unix() > claims.ExpiresAt {
-				code = cd.TimeoutAuthToken
-			}
+		if Authorization == "" {
+			core.FailResp(c, cd.InvalidParams)
+			return
 		}
 
-		if code != 0 {
-			core.FailResp(c, code)
+		claims, err := utils.ParseToken(Authorization)
+		if err != nil {
+			core.FailResp(c, cd.ErrorAuthToken)
+			return
+		}
+		if time.Now().Unix() > claims.ExpiresAt {
+			core.FailResp(c, cd.TimeoutAuthToken)
 			return
 		}
 
 		c.Next()
 	}
 
-}
-
-func jwtUnAuthFunc(c *gin.Context, code int, message string) {
-	c.JSON(code, gin.H{
-		"code":    code,
-		"message": message,
-	})
-}
-func loginResponse(c *gin.Context, code int, token string, expire time.Time) {
-	m := make(map[string]interface{})
-	m["token"] = token
-	m["expire"] = expire
-	core.SetData(c, m)
 }

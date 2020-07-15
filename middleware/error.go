@@ -1,7 +1,10 @@
 package middleware
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"skrshop-api/core"
 )
 
@@ -10,29 +13,21 @@ func ErrorHandle() gin.HandlerFunc {
 		c.Next()
 
 		e := c.Errors.Last()
+		err := e.Err
+		var errStr string
+		//// TODO::记录错误日志
 		if e != nil {
-			core.ErrorParamsResp(c, e.Err.Error())
+			switch err.(type) {
+			case validator.ValidationErrors:
+				errStr = core.Translate(err.(validator.ValidationErrors))
+			case *json.UnmarshalTypeError:
+				unmarshalTypeError := err.(*json.UnmarshalTypeError)
+				errStr = fmt.Errorf("%s 类型错误，期望类型 %s", unmarshalTypeError.Field, unmarshalTypeError.Type.String()).Error()
+			default:
+				errStr = e.Err.Error()
+			}
 		}
-
+		core.ErrorParamsResp(c, errStr)
 	}
 
-	//return func(c *gin.Context) {
-	//	defer func() {
-	//		if err := recover(); err != nil {
-	//
-	//			//}else if e, ok := err.(error); ok {
-	//			//	Err = OtherError(e.Error())
-	//			//}else{
-	//			//	Err = ServerError
-	//			//}
-	//			//// 记录一个错误的日志
-	//			//c.JSON(Err.StatusCode,Err)
-	//			fmt.Println(reflect.TypeOf(err))
-	//
-	//			//core.ErrorParamsResp(c,err)
-	//			return
-	//		}
-	//	}()
-	//	c.Next()
-	//}
 }

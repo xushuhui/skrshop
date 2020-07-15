@@ -17,10 +17,14 @@ type UserToken struct {
 func Login(c *gin.Context) {
 	var req request.Login
 	if err := core.ParseRequest(c, &req); err != nil {
+		c.Error(err)
 		return
 	}
-
 	userModel, err := model.GetAccountUserOne("phone=?", req.Phone)
+	if err != nil {
+		c.Error(err)
+		return
+	}
 	// 正确密码验证
 	err = bcrypt.CompareHashAndPassword([]byte(userModel.Password), []byte(req.Password))
 	if err != nil {

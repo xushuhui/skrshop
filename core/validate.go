@@ -3,7 +3,6 @@ package core
 import (
 	"reflect"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin/binding"
@@ -13,11 +12,19 @@ import (
 	zhtranslations "github.com/go-playground/validator/v10/translations/zh"
 )
 
-func isMobile(fl validator.FieldLevel) bool {
-	mobile := strconv.Itoa(int(fl.Field().Uint()))
+func mobileValidate(fl validator.FieldLevel) bool {
+	mobile := fl.Field().String()
 	re := `^1[3456789]\d{9}$`
 	r := regexp.MustCompile(re)
 	return r.MatchString(mobile)
+
+}
+func mobileRegister(ut ut.Translator) error {
+	return ut.Add("mobile", "{0}填写不正确哦", true)
+}
+func mobileTranslation(ut ut.Translator, fe validator.FieldError) string {
+	t, _ := ut.T("mobile", fe.Field())
+	return t
 }
 
 var trans ut.Translator
@@ -25,7 +32,6 @@ var trans ut.Translator
 func InitValidate() {
 	// 中文翻译
 	zh := zhongwen.New()
-
 	uni := ut.New(zh, zh)
 	trans, _ = uni.GetTranslator("zh")
 
@@ -35,18 +41,22 @@ func InitValidate() {
 		//v.RegisterTagNameFunc(jsonTag)
 		// 验证器注册翻译器
 		zhtranslations.RegisterDefaultTranslations(v, trans)
+		v.RegisterTagNameFunc(func(fld reflect.StructField) string {
+			return fld.Tag.Get("comment")
+		})
 		// 自定义验证方法
-		v.RegisterValidation("isMobile", isMobile)
+		v.RegisterValidation("mobile", mobileValidate)
+		v.RegisterTranslation("mobile", trans, mobileRegister, mobileTranslation)
+		//v.RegisterTranslation("required", trans, func(ut ut.Translator) error {
+		//	return ut.Add("required", "{0} must have a value!", true) // see universal-translator for details
+		//}, func(ut ut.Translator, fe validator.FieldError) string {
+		//	t, _ := ut.T("required", fe.Field())
+		//
+		//	return t
+		//})
 	}
 }
-func jsonTag(fld reflect.StructField) string {
-	name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
-	if name == "-" {
-		return ""
-	}
-	return name
 
-}
 func Translate(errs validator.ValidationErrors) string {
 	var errList []string
 
