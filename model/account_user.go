@@ -39,10 +39,10 @@ func GetAccountUserById(id string) (accountUser *AccountUser, err error) {
 	return
 }
 
-func GetAccountUserOne(where string, args ...interface{}) (accountUser *AccountUser, err error) {
-	err = DB.Model(accountUser).First(accountUser, where, args).Error
-
+func GetAccountUserOne(where string, args ...interface{}) (model AccountUser, err error) {
+	err = DB.First(&model, where, args).Error
 	return
+
 }
 
 func GetAccountUserList(page, limit int64, where string, condition interface{}) (list []*AccountUser, err error) {

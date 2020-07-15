@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
-	"skrshop-api/core"
+	"skrshop-api/conf"
 	"time"
 )
 
@@ -14,14 +14,14 @@ var (
 )
 
 func HttpServerRun() {
-	gin.SetMode(core.RunMode)
+	gin.SetMode(conf.RunMode)
 	r := InitRouter()
-	port := core.HTTPPort
+	port := conf.HTTPPort
 	HttpSrvHandler = &http.Server{
 		Addr:         port,
 		Handler:      r,
-		ReadTimeout:  core.ReadTimeout,
-		WriteTimeout: core.WriteTimeout,
+		ReadTimeout:  conf.ReadTimeout,
+		WriteTimeout: conf.WriteTimeout,
 	}
 	go func() {
 		log.Printf(" [INFO] HttpServerRun:%s\n", port)
