@@ -1,4 +1,4 @@
-package conf
+package config
 
 import (
 	"github.com/go-ini/ini"
@@ -15,6 +15,7 @@ var (
 	HTTPPort string
 
 	JwtSecret     string
+	AppName       string
 	ReadTimeout   time.Duration
 	WriteTimeout  time.Duration
 	DBType        string
@@ -22,10 +23,21 @@ var (
 	RedisHost     string
 	RedisPassword string
 )
+var (
+	ApiAuthConfig = map[string]map[string]string{
+		// 调用方
+		"DEMO": {
+			"md5": "IgkibX71IEf382PT",
+			"aes": "IgkibX71IEf382PT",
+			"rsa": "rsa/public.pem",
+		},
+	}
+	AppSignExpiry = "120"
+)
 
 func init() {
 	var err error
-	Cfg, err = ini.Load("conf/app.ini")
+	Cfg, err = ini.Load("config/app.ini")
 	if err != nil {
 		log.Fatalf("Fail to parse 'conf/app.ini': %v", err)
 	}
@@ -60,6 +72,7 @@ func loadApp() {
 		log.Fatalf("Fail to get section 'app': %v", err)
 	}
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
+	AppName = sec.Key("AppName").MustString("app")
 }
 func loadDB() {
 	sec, err := Cfg.GetSection("database")

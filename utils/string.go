@@ -1,10 +1,11 @@
 package utils
 
 import (
-	"math/rand"
+	cr "crypto/rand"
+	"fmt"
+	"io"
 	"strconv"
 	"strings"
-	"time"
 	"unicode/utf8"
 )
 
@@ -36,13 +37,6 @@ func SubString(str string, begin, length int) (substr string) {
 }
 
 // 生成一个随机int64
-func RandInt(i int64) int64 {
-	if i == 0 {
-		return 0
-	}
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return r.Int63n(i)
-}
 
 func MinInt64(a, b int64) (r int64) {
 	if a > b {
@@ -60,14 +54,6 @@ func MaxInt64(a, b int64) (r int64) {
 		r = b
 	}
 	return
-}
-
-func RandInt2(i int) int {
-	if i == 0 {
-		return 0
-	}
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return r.Intn(i)
 }
 
 const (
@@ -89,15 +75,6 @@ func FilterEmoji(content string) string {
 		}
 	}
 	return newContent
-}
-
-func TokenGetUid(token string) (uid uint64) {
-	var ks []string
-	ks = strings.Split(token, "_")
-	if len(ks) == 2 {
-		uid, _ = ToUint64(ks[0])
-	}
-	return
 }
 
 func SubAtNameString(str string) (nameList []string) {
@@ -125,4 +102,16 @@ func IntFenToYuanStr(fen int64) (yuan string) {
 func Int01FenToYuanStr(fen int64) (yuan string) {
 	yuan = strconv.FormatFloat(float64(fen)/10000, 'f', -1, 64)
 	return
+}
+func UUID() (string, error) {
+	uuid := make([]byte, 16)
+	n, err := io.ReadFull(cr.Reader, uuid)
+	if n != len(uuid) || err != nil {
+		return "", err
+	}
+	// variant bits; see section 4.1.1
+	uuid[8] = uuid[8]&^0xc0 | 0x80
+	// version 4 (pseudo-random); see section 4.1.3
+	uuid[6] = uuid[6]&^0xf0 | 0x40
+	return fmt.Sprintf("%x%x%x%x%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:]), nil
 }

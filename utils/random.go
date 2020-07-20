@@ -49,3 +49,17 @@ func RandStr(size int) string {
 	}
 	return string(result)
 }
+func RandInt(i int64) int64 {
+	if i == 0 {
+		return 0
+	}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return r.Int63n(i)
+}
+func RandInt2(i int) int {
+	if i == 0 {
+		return 0
+	}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return r.Intn(i)
+}

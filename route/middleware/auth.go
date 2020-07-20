@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	cd "skrshop-api/code"
+	cd "skrshop-api/app/code"
 	"skrshop-api/core"
-	"skrshop-api/utils"
+	"skrshop-api/lib"
 	"time"
 )
 
@@ -17,7 +17,7 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 
-		claims, err := utils.ParseToken(Authorization)
+		claims, err := lib.ParseToken(Authorization)
 		if err != nil {
 			core.FailResp(c, cd.ErrorAuthToken)
 			return

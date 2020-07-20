@@ -3,11 +3,11 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"skrshop-api/code"
+	"skrshop-api/app/code"
+	"skrshop-api/app/model"
+	"skrshop-api/app/request"
 	"skrshop-api/core"
-	"skrshop-api/model"
-	"skrshop-api/request"
-	"skrshop-api/utils"
+	"skrshop-api/lib"
 )
 
 type UserToken struct {
@@ -30,7 +30,7 @@ func Login(c *gin.Context) {
 	if err != nil {
 		core.FailResp(c, code.ErrorPassWord)
 	}
-	data, err := utils.GenerateToken(userModel.Id)
+	data, err := lib.GenerateToken(userModel.Id)
 	if err != nil {
 		c.Error(err)
 		return

@@ -3,6 +3,7 @@ package code
 var MsgFlags = map[int]string{
 	SUCCESS:               "ok",
 	InvalidParams:         "请求参数错误",
+	ServerError:           "系统异常，请联系管理员！",
 	AuthCheckTokenFail:    "Token鉴权失败",
 	AuthCheckTokenTimeout: "Token已超时",
 	ErrorAuthToken:        "Token错误",
