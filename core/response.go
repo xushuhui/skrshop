@@ -3,7 +3,7 @@ package core
 import (
 	"github.com/gin-gonic/gin"
 
-	errCode "skrshop-api/code"
+	errCode "skrshop-api/app/code"
 )
 
 // JsonResponse 数据返回通用 JSON 数据结构
@@ -23,7 +23,7 @@ func FailResp(c *gin.Context, code int) {
 	})
 	return
 }
-func ErrorParamsResp(c *gin.Context, msg string) {
+func InvalidParamsResp(c *gin.Context, msg string) {
 	c.AbortWithStatusJSON(200, JsonResponse{
 		Code:    errCode.InvalidParams,
 		Message: msg,
@@ -42,5 +42,11 @@ func SetData(c *gin.Context, data interface{}) {
 		Code:    0,
 		Message: errCode.GetMsg(0),
 		Data:    data,
+	})
+}
+func ServerError(c *gin.Context) {
+	c.JSON(500, JsonResponse{
+		Code:    errCode.ServerError,
+		Message: errCode.GetMsg(errCode.ServerError),
 	})
 }

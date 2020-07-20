@@ -1,4 +1,4 @@
-package utils
+package lib
 
 import (
 	"errors"
@@ -16,8 +16,7 @@ type Claims struct {
 }
 
 func GenerateToken(uid uint) (string, error) {
-	nowTime := time.Now()
-	expireTime := nowTime.Add(3 * time.Hour)
+	expireTime := time.Now().Add(24 * time.Hour)
 
 	claims := Claims{
 		uid,
