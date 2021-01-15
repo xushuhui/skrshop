@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-var r = rand.New(rand.NewSource(time.Now().UnixNano()))
-
 func GetRandom(min, max int) int {
 	return rand.Intn(max-min) + min + 1 //r.Intn(max-min) + min + 1
 }
