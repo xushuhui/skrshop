@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/log"
 	v1 "skrshop/api/helloworld/v1"
 	"skrshop/internal/biz"
-	"github.com/go-kratos/kratos/v2/log"
 )
 
 // GreeterService is a greeter service.
@@ -24,5 +24,5 @@ func NewGreeterService(uc *biz.GreeterUsecase, logger log.Logger) *GreeterServic
 // SayHello implements helloworld.GreeterServer
 func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
 	s.log.Infof("SayHello Received: %v", in.GetName())
-	return &v1.HelloReply{Message: "Hello " + in.GetName()}, nil
+	return &v1.HelloReply{Messagesss: "Hello " + in.GetName()}, nil
 }

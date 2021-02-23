@@ -1,11 +1,8 @@
 package main
 
 import (
+	"context"
 	"flag"
-
-	pb "skrshop/api/helloworld/v1"
-	"skrshop/internal/conf"
-	"skrshop/internal/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
@@ -13,6 +10,11 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"gopkg.in/yaml.v2"
+	l "log"
+	pb "skrshop/api/helloworld/v1"
+	"skrshop/internal/conf"
+	"skrshop/internal/data/ent"
+	"skrshop/internal/service"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -45,6 +47,7 @@ func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, greeter *servic
 }
 
 func main() {
+
 	flag.Parse()
 	logger := log.NewStdLogger()
 
@@ -56,6 +59,7 @@ func main() {
 			return yaml.Unmarshal(kv.Value, v)
 		}),
 	)
+
 	if err := config.Load(); err != nil {
 		panic(err)
 	}
@@ -73,5 +77,16 @@ func main() {
 	// start and wait for stop signal
 	if err := app.Run(); err != nil {
 		panic(err)
+	}
+}
+func initDb() {
+	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	if err != nil {
+		l.Fatalf("failed opening connection to sqlite: %v", err)
+	}
+	defer client.Close()
+	// Run the auto migration tool.
+	if err := client.Schema.Create(context.Background()); err != nil {
+		l.Fatalf("failed creating schema resources: %v", err)
 	}
 }
