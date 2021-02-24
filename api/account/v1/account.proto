@@ -10,9 +10,9 @@ option java_package = "dev.kratos.api.account.v1";
 option java_outer_classname = "HelloWorldProtoV1";
 
 // The greeting service definition.
-service Greeter {
+service Account {
   // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply)  {
+  rpc SignUp (SignUpRequest) returns (CommonReply)  {
     option (google.api.http) = {
       get: "/account/{name}",
     };
@@ -20,11 +20,18 @@ service Greeter {
 }
 
 // The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
+message SignUpRequest {
+  string email = 1;
+  string phone = 2;
+}
+message SignUpReply{
+   CommonReply commonReply=1;
+   
 }
 
 // The response message containing the greetings
-message HelloReply {
-  string message = 1;
+message CommonReply {
+  int32 code =1;
+  string message = 2;
+
 }
