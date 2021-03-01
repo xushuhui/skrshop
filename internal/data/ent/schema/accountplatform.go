@@ -20,8 +20,6 @@ func (AccountPlatform) Fields() []ent.Field {
 		field.String("nickname").MaxLen(60).Default("").Comment(""),
 		field.String("avatar").MaxLen(255).Default("").Comment(""),
 		field.Int8("type").Default(0).Comment("平台类型 0: 未知，1:facebook,2:google,3:wechat,4:qq,5:weibo,6:twitter"),
-		field.Time("create_at").Comment("创建时间"),
-		field.Time("update_at").Comment("更新时间"),
 	}
 }
 
@@ -32,5 +30,10 @@ func (AccountPlatform) Edges() []ent.Edge {
 func (AccountPlatform) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("uid", "platform_id"),
+	}
+}
+func (AccountPlatform) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		TimeMixin{},
 	}
 }

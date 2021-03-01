@@ -4,6 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"entgo.io/ent/schema/mixin"
 )
 
 // StaffInfo holds the schema definition for the StaffInfo entity.
@@ -21,9 +22,6 @@ func (StaffInfo) Fields() []ent.Field {
 		field.String("name").MaxLen(30).Default("").Comment("姓名"),
 		field.String("avatar").MaxLen(255).Default("").Comment(""),
 		field.Int8("gender").Default(1).Comment("性别 1 unknow 2 male 3 female"),
-
-		field.Time("create_at").Comment("创建时间"),
-		field.Time("update_at").Comment("更新时间"),
 	}
 }
 
@@ -34,5 +32,22 @@ func (StaffInfo) Edges() []ent.Edge {
 func (StaffInfo) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("email", "phone"),
+	}
+}
+func (StaffInfo) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		TimeMixin{},
+	}
+}
+
+type TimeMixin struct {
+	mixin.Schema
+}
+
+func (TimeMixin) Mixin() []ent.Field {
+	return []ent.Field{
+		field.Time("create_at").Comment("创建时间"),
+		field.Time("update_at").Comment("更新时间"),
+		field.Int8("status").Default(0).Comment("状态 1:enable, 0:disable, -1:deleted"),
 	}
 }

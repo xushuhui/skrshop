@@ -35,3 +35,8 @@ func (SkrMember) Indexes() []ent.Index {
 		index.Fields("uid"),
 	}
 }
+func (SkrMember) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		TimeMixin{},
+	}
+}

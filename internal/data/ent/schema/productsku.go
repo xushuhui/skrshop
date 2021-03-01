@@ -21,13 +21,15 @@ func (ProductSku) Fields() []ent.Field {
 		field.Int8("price_scale").Default(0).Comment("售价，金额对应的小数位数"),
 		field.Int64("market_price_fee").Default(0).Positive().Comment("市场价，整数方式保存"),
 		field.Int8("market_price_scale").Default(0).Comment("市场价，金额对应的小数位数"),
-		field.Time("create_at").Comment("创建时间"),
-		field.Time("update_at").Comment("更新时间"),
-		field.Int8("status").Default(0).Comment("状态 1:enable, 0:disable, -1:deleted"),
 	}
 }
 
 // Edges of the ProductSku.
 func (ProductSku) Edges() []ent.Edge {
 	return nil
+}
+func (ProductSku) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		TimeMixin{},
+	}
 }

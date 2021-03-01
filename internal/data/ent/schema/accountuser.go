@@ -17,8 +17,6 @@ func (AccountUser) Fields() []ent.Field {
 		field.String("email").MaxLen(30).Default("").Comment("邮箱"),
 		field.String("phone").MaxLen(15).Default("").Comment("手机号"),
 		field.String("password").MaxLen(32).Default("").Comment("密码"),
-		field.Time("create_at").Comment("创建时间"),
-		field.Int8("status").Default(0).Comment("状态 1:enable, 0:disable, -1:deleted"),
 	}
 
 }
@@ -30,5 +28,10 @@ func (AccountUser) Edges() []ent.Edge {
 func (AccountUser) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("email", "phone"),
+	}
+}
+func (AccountUser) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		TimeMixin{},
 	}
 }

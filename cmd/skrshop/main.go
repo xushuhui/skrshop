@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -10,10 +9,10 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"gopkg.in/yaml.v2"
-	l "log"
+
 	pb "skrshop/api/helloworld/v1"
 	"skrshop/internal/conf"
-	"skrshop/internal/data/ent"
+
 	"skrshop/internal/service"
 )
 
@@ -80,13 +79,13 @@ func main() {
 	}
 }
 func initDb() {
-	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
-	if err != nil {
-		l.Fatalf("failed opening connection to sqlite: %v", err)
-	}
-	defer client.Close()
-	// Run the auto migration tool.
-	if err := client.Schema.Create(context.Background()); err != nil {
-		l.Fatalf("failed creating schema resources: %v", err)
-	}
+	//client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	//if err != nil {
+	//	l.Fatalf("failed opening connection to sqlite: %v", err)
+	//}
+	//defer client.Close()
+	//// Run the auto migration tool.
+	//if err := client.Schema.Create(context.Background()); err != nil {
+	//	l.Fatalf("failed creating schema resources: %v", err)
+	//}
 }
