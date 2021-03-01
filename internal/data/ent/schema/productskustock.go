@@ -12,14 +12,15 @@ type ProductSkuStock struct {
 
 // Fields of the ProductSkuStock.
 func (ProductSkuStock) Fields() []ent.Field {
-	return []ent.Field{
-		field.Time("create_at").Comment("创建时间"),
-		field.Time("update_at").Comment("更新时间"),
-		field.Int8("status").Default(0).Comment("状态 1:enable, 0:disable, -1:deleted"),
-	}
+	return []ent.Field{}
 }
 
 // Edges of the ProductSkuStock.
 func (ProductSkuStock) Edges() []ent.Edge {
 	return nil
+}
+func (ProductSkuStock) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		TimeMixin{},
+	}
 }
