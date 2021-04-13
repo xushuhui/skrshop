@@ -1,7 +1,9 @@
 package server
 
 import (
+	v1 "skrshop/api/helloworld/v1"
 	"skrshop/internal/conf"
+	"skrshop/internal/service"
 
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
@@ -12,7 +14,7 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server) *grpc.Server {
+func NewGRPCServer(c *conf.Server, greeter *service.GreeterService) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			middleware.Chain(
@@ -32,5 +34,7 @@ func NewGRPCServer(c *conf.Server) *grpc.Server {
 	if c.Grpc.Timeout != nil {
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
-	return grpc.NewServer(opts...)
+	srv := grpc.NewServer(opts...)
+	v1.RegisterGreeterServer(srv, greeter)
+	return srv
 }
