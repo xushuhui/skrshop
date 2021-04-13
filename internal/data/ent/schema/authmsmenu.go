@@ -11,7 +11,9 @@ type AuthMsMenu struct {
 
 // Fields of the AuthMsMenu.
 func (AuthMsMenu) Fields() []ent.Field {
-	return []ent.Field{}
+	return []ent.Field{
+		
+	}
 }
 
 // Edges of the AuthMsMenu.

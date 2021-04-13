@@ -34,3 +34,7 @@ bin/
 .vscode/
 .idea/
 *.swp
+
+*.pb.go
+internal/data/ent/*
+!internal/data/ent/schema
