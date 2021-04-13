@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"os"
+
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
@@ -10,10 +12,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"gopkg.in/yaml.v2"
 
-	pb "skrshop/api/helloworld/v1"
 	"skrshop/internal/conf"
-
-	"skrshop/internal/service"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -30,9 +29,7 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, greeter *service.GreeterService) *kratos.App {
-	pb.RegisterGreeterServer(gs, greeter)
-	pb.RegisterGreeterHTTPServer(hs, greeter)
+func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server) *kratos.App {
 	return kratos.New(
 		kratos.Name(Name),
 		kratos.Version(Version),
@@ -48,9 +45,9 @@ func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, greeter *servic
 func main() {
 
 	flag.Parse()
-	logger := log.NewStdLogger()
+	logger := log.NewStdLogger(os.Stdout)
 
-	config := config.New(
+	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
 		),
@@ -58,13 +55,12 @@ func main() {
 			return yaml.Unmarshal(kv.Value, v)
 		}),
 	)
-
-	if err := config.Load(); err != nil {
+	if err := c.Load(); err != nil {
 		panic(err)
 	}
 
 	var bc conf.Bootstrap
-	if err := config.Scan(&bc); err != nil {
+	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
 
