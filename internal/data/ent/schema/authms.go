@@ -12,7 +12,9 @@ type AuthMs struct {
 
 // Fields of the AuthMs.
 func (AuthMs) Fields() []ent.Field {
-	return []ent.Field{}
+	return []ent.Field{
+		field.String("ms_name").MaxLen(30).Default("").Comment("系统名称"),
+	}
 }
 
 // Edges of the AuthMs.

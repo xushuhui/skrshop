@@ -12,7 +12,9 @@ type ProductSkuStock struct {
 
 // Fields of the ProductSkuStock.
 func (ProductSkuStock) Fields() []ent.Field {
-	return []ent.Field{}
+	return []ent.Field{
+		field.Int64("sku_id").Default(0).Positive().Comment("sku_id"),
+	}
 }
 
 // Edges of the ProductSkuStock.
