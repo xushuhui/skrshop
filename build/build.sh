@@ -1,1 +1,1 @@
-make proto && make build && ./bin/skrshop -conf ./configs
+make generate && make build && ./bin/skrshop -conf ./configs
