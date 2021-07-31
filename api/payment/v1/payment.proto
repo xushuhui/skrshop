@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/go-kratos/service-layout/api/pay/v1;v1";
+option java_multiple_files = true;
+
+
+// The greeting service definition.
+service Payment {
+ 
+}
+
