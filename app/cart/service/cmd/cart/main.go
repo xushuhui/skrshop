@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"skrshop/app/cart/service/internal/conf"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -10,9 +11,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-
-
-	"skrshop/internal/conf"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -66,6 +64,7 @@ func main() {
 	}
 
 	var bc conf.Bootstrap
+
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}

@@ -1,65 +1,59 @@
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
-PROTO_FILES=$(shell find . -name *.proto)
-KRATOS_VERSION=$(shell go mod graph |grep go-kratos/kratos/v2 |head -n 1 |awk -F '@' '{print $$2}')
-KRATOS=$(GOPATH)/pkg/mod/github.com/go-kratos/kratos/v2@$(KRATOS_VERSION)
+INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
+API_PROTO_FILES=$(shell find api -name *.proto)
 
 .PHONY: init
 # init env
 init:
+	go get -u github.com/go-kratos/kratos/cmd/kratos/v2
 	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
 	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
 	go get -u github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2
 	go get -u github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2
-	go get -u github.com/google/wire/cmd/wire
+	go get -u github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
+	go get -u github.com/envoyproxy/protoc-gen-validate
 
-.PHONY: grpc
-# generate grpc code
-grpc:
+.PHONY: errors
+# generate errors code
+errors:
 	protoc --proto_path=. \
-           --proto_path=$(KRATOS)/api \
-           --proto_path=$(KRATOS)/third_party \
-           --proto_path=$(GOPATH)/src \
-           --go_out=paths=source_relative:. \
-           --go-grpc_out=paths=source_relative:. \
-           --go-errors_out=paths=source_relative:. \
-           $(PROTO_FILES)
+               --proto_path=./third_party \
+               --go_out=paths=source_relative:. \
+               --go-errors_out=paths=source_relative:. \
+               $(API_PROTO_FILES)
 
-.PHONY: http
-# generate http code
-http:
+.PHONY: config
+# generate internal proto
+config:
 	protoc --proto_path=. \
-           --proto_path=$(KRATOS)/api \
-           --proto_path=$(KRATOS)/third_party \
-           --proto_path=$(GOPATH)/src \
-           --go_out=paths=source_relative:. \
-           --go-http_out=paths=source_relative:. \
-           --go-errors_out=paths=source_relative:. \
-           $(PROTO_FILES)
+	       --proto_path=./third_party \
+ 	       --go_out=paths=source_relative:. \
+	       $(INTERNAL_PROTO_FILES)
 
-.PHONY: generate
-# generate client code
-generate:
-	go generate ./...
+.PHONY: api
+# generate api proto
+api:
+	protoc --proto_path=. \
+	       --proto_path=./third_party \
+ 	       --go_out=paths=source_relative:. \
+ 	       --go-http_out=paths=source_relative:. \
+ 	       --go-grpc_out=paths=source_relative:. \
+               --validate_out=paths=source_relative,lang=go:. \
+               --openapiv2_out . \
+	       $(API_PROTO_FILES)
 
 .PHONY: build
 # build
 build:
 	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
 
-.PHONY: test
-# test
-test:
-	go test -v ./... -cover
-
 .PHONY: all
 # generate all
 all:
-	make grpc;
-	make http;
-	make generate;
-	make build;
-	make test;
+	make api;
+	make errors;
+	make config;
 
 # show help
 help:

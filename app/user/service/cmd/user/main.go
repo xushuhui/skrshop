@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"skrshop/app/user/service/internal/conf"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -10,9 +11,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"gopkg.in/yaml.v2"
-
-	"skrshop/internal/conf"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -23,6 +21,8 @@ var (
 	Version string
 	// flagconf is the config flag.
 	flagconf string
+
+	id, _ = os.Hostname()
 )
 
 func init() {
@@ -31,6 +31,7 @@ func init() {
 
 func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server) *kratos.App {
 	return kratos.New(
+		kratos.ID(id),
 		kratos.Name(Name),
 		kratos.Version(Version),
 		kratos.Metadata(map[string]string{}),
@@ -43,17 +44,20 @@ func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server) *kratos.App {
 }
 
 func main() {
-
 	flag.Parse()
-	logger := log.NewStdLogger(os.Stdout)
-
+	logger := log.With(log.NewStdLogger(os.Stdout),
+		"ts", log.DefaultTimestamp,
+		"caller", log.DefaultCaller,
+		"service.id", id,
+		"service.name", Name,
+		"service.version", Version,
+		"trace_id", log.TraceID(),
+		"span_id", log.SpanID(),
+	)
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
 		),
-		config.WithDecoder(func(kv *config.KeyValue, v map[string]interface{}) error {
-			return yaml.Unmarshal(kv.Value, v)
-		}),
 	)
 	if err := c.Load(); err != nil {
 		panic(err)
@@ -64,24 +68,14 @@ func main() {
 		panic(err)
 	}
 
-	app, err := initApp(bc.Server, bc.Data, logger)
+	app, cleanup, err := initApp(bc.Server, bc.Data, logger)
 	if err != nil {
 		panic(err)
 	}
+	defer cleanup()
 
 	// start and wait for stop signal
 	if err := app.Run(); err != nil {
 		panic(err)
 	}
-}
-func initDb() {
-	//client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
-	//if err != nil {
-	//	l.Fatalf("failed opening connection to sqlite: %v", err)
-	//}
-	//defer client.Close()
-	//// Run the auto migration tool.
-	//if err := client.Schema.Create(context.Background()); err != nil {
-	//	l.Fatalf("failed creating schema resources: %v", err)
-	//}
 }
