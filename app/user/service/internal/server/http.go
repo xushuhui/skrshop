@@ -2,8 +2,8 @@ package server
 
 import (
 	v1 "skrshop/api/helloworld/v1"
-	"skrshop/internal/conf"
-	"skrshop/internal/service"
+	"skrshop/app/user/service/internal/conf"
+	"skrshop/app/user/service/internal/service"
 
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/logging"

@@ -26,7 +26,7 @@ type CartUsecase struct {
 }
 
 func NewCartUsecase(repo CartRepo, logger log.Logger) *CartUsecase {
-	return &CartUseCase{repo: repo, log: log.NewHelper(logger)}
+	return &CartUsecase{repo: repo, log: log.NewHelper(logger)}
 }
 
 func (uc *CartUsecase) GetCart(ctx context.Context, uid int64) (*Cart, error) {
@@ -94,7 +94,3 @@ func (uc *CartUsecase) DeleteItem(ctx context.Context, uid int64, itemId int64) 
 	}
 	return uc.repo.GetCart(ctx, uid)
 }
-
-
-
-

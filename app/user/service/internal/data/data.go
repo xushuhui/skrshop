@@ -1,7 +1,8 @@
 package data
 
 import (
-	"skrshop/internal/conf"
+	"skrshop/app/user/service/internal/conf"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 )

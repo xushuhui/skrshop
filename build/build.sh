@@ -1,1 +1,0 @@
-make generate && make build && ./bin/skrshop -conf ./configs
