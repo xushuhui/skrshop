@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/go-kratos/service-layout/api/account/v1;v1";
+option java_multiple_files = true;
+
+
+// The greeting service definition.
+service User {
+  // Sends a greeting
+  rpc SignUp (SignUpRequest) returns (SignUpReply)  {
+    option (google.api.http) = {
+      post: "/signup",
+      body: "*"
+    };
+  }
+  rpc SignIn(SignInRequest) returns (SignInReply){
+    option (google.api.http) = {
+      post: "/signin",
+      body: "*"
+    };
+  }
+  rpc Auth(AuthRequest) returns (AuthReply){
+    option (google.api.http) = {
+      post: "/auth",
+      body: "*"
+    };
+  }
+}
+message AuthRequest{
+  string type = 1;
+  string platform_id = 2;
+  string platform_token = 3;
+}
+message AuthReply{
+  string uid=1;
+  string nickname = 2;
+  string avatar = 3;
+}
+message SignUpRequest {
+  string email = 1;
+  string phone = 2;
+}
+message SignUpReply{
+ 
+   string uid=1;
+}
+message SignInRequest {
+  string email = 1;
+  string phone = 2;
+  string password =3;
+}
+message SignInReply{
+ 
+  string uid=1;
+}
+
