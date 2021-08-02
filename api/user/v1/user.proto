@@ -10,6 +10,11 @@ option java_multiple_files = true;
 
 // The greeting service definition.
 service User {
+  rpc SayHello (HelloRequest) returns (HelloReply)  {
+    option (google.api.http) = {
+      get: "/helloworld",
+    };
+  }
   // Sends a greeting
   rpc SignUp (SignUpRequest) returns (SignUpReply)  {
     option (google.api.http) = {
@@ -58,3 +63,11 @@ message SignInReply{
   string uid=1;
 }
 
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}
