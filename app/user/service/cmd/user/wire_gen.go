@@ -1,5 +1,3 @@
-
-
 //go:generate go run github.com/google/wire/cmd/wire
 //+build !wireinject
 
@@ -19,15 +17,15 @@ import (
 
 // initApp init kratos application.
 func initApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData,cleanup, err := data.NewData(confData)
+	dataData, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
-	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewGreeterService(greeterUsecase, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService)
-	grpcServer := server.NewGRPCServer(confServer, greeterService)
+	repo := data.NewUserRepo(dataData, logger)
+	usecase := biz.NewUserUsecase(repo, logger)
+	userService := service.NewUserService(usecase, logger)
+	httpServer := server.NewHTTPServer(confServer, userService, logger)
+	grpcServer := server.NewGRPCServer(confServer, userService, logger)
 	app := newApp(logger, httpServer, grpcServer)
 	return app, func() {
 		cleanup()
