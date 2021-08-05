@@ -1,7 +1,9 @@
 package data
 
 import (
-	"skrshop/internal/biz"
+	"context"
+	"skrshop/app/cart/service/internal/biz"
+
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -12,16 +14,23 @@ type cartRepo struct {
 
 // NewGreeterRepo .
 func NewCartRepo(data *Data, logger log.Logger) biz.CartRepo {
+
 	return &cartRepo{
 		data: data,
 		log:  log.NewHelper(logger),
 	}
 }
 
-func (r *cartRepo) CreateGreeter(ctx context.Context, g *biz.Greeter) error {
-	return nil
+func (u cartRepo)GetCart(ctx context.Context, uid int64) (*biz.Cart, error) {
+	panic("implement me")
 }
 
-func (r *cartRepo) UpdateGreeter(ctx context.Context, g *biz.Greeter) error {
-	return nil
+func (u cartRepo) SaveCart(ctx context.Context, c *biz.Cart) error{
+	panic("implement me")
 }
+
+func (u cartRepo) DeleteCart(ctx context.Context, uid int64)  error {
+	panic("implement me")
+}
+
+
