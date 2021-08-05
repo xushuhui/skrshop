@@ -10,6 +10,18 @@ option java_multiple_files = true;
 
 // The greeting service definition.
 service Payment {
- 
+  rpc SayHello (HelloRequest) returns (HelloReply)  {
+    option (google.api.http) = {
+      get: "/helloworld",
+    };
+  }
 }
 
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}
