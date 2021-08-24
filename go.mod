@@ -3,7 +3,7 @@ module skrshop
 go 1.15
 
 require (
-
+	entgo.io/ent v0.8.0 // indirect
 	github.com/go-kratos/kratos/v2 v2.0.0
 	github.com/google/wire v0.5.0
 	github.com/kr/text v0.2.0 // indirect
