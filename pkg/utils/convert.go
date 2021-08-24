@@ -479,9 +479,6 @@ func Struct2Map2(obj interface{}) map[string]interface{} {
 }
 
 // //MAP->结构
-func MapToStruct(data map[string]interface{}, obj interface{}) error {
-	return Decode(data, obj)
-}
 
 func Bool2Int(b bool) int {
 	if b {

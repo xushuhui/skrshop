@@ -1,12 +1,13 @@
 package data
 
 import (
-	"skrshop/internal/conf"
+	"skrshop/app/payment/service/internal/conf"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 )
 
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo)
+var ProviderSet = wire.NewSet(NewData, NewPaymentRepo)
 
 // Data .
 type Data struct {

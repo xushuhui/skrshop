@@ -2,15 +2,11 @@ package server
 
 import (
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/metrics"
-	"github.com/go-kratos/kratos/v2/middleware/validate"
 	v1 "skrshop/api/user/v1"
 	"skrshop/app/user/service/internal/conf"
 	"skrshop/app/user/service/internal/service"
 
-	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/http"
 )
 
@@ -19,10 +15,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.UserService, logger log.Logg
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
-			tracing.Server(),
-			logging.Server(logger),
-			metrics.Server(),
-			validate.Validator(),
 		),
 	}
 	if c.Http.Network != "" {
