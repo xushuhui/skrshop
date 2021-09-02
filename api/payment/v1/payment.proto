@@ -4,7 +4,7 @@ package payment.v1;
 
 import "google/api/annotations.proto";
 
-option go_package = "github.com/go-kratos/service-layout/api/pay/v1;v1";
+option go_package = "skrshop/api/payment/v1;v1";
 option java_multiple_files = true;
 
 

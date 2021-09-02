@@ -2,9 +2,7 @@ GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
 API_PROTO_FILES=$(shell find api -name *.proto)
-KRATOS_VERSION=$(shell go mod graph |grep go-kratos/kratos/v2 |head -n 1 |awk -F '@' '{print $$2}')
-KRATOS=$(GOPATH)/pkg/mod/github.com/go-kratos/kratos/v2@$(KRATOS_VERSION)
-THIRD_PATH==$(KRATOS)/third_party
+
 .PHONY: init
 # init env
 init:
@@ -13,8 +11,6 @@ init:
 	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
 	go get -u github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2
 	go get -u github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2
-	go get -u github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
-	go get -u github.com/envoyproxy/protoc-gen-validate
 
 .PHONY: errors
 # generate errors code
@@ -29,7 +25,7 @@ errors:
 # generate internal proto
 config:
 	protoc --proto_path=. \
-	       --proto_path=$(THIRD_PATH) \
+	       --proto_path=./third_party \
  	       --go_out=paths=source_relative:. \
 	       $(INTERNAL_PROTO_FILES)
 
@@ -37,11 +33,10 @@ config:
 # generate api proto
 api:
 	protoc --proto_path=. \
-	       --proto_path=$(THIRD_PATH) \
+	       --proto_path=./third_party \
  	       --go_out=paths=source_relative:. \
  	       --go-http_out=paths=source_relative:. \
  	       --go-grpc_out=paths=source_relative:. \
-               --validate_out=paths=source_relative,lang=go:. \
 	       $(API_PROTO_FILES)
 
 .PHONY: build
@@ -49,12 +44,18 @@ api:
 build:
 	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
 
+.PHONY: generate
+# generate
+generate:
+	go generate ./...
+
 .PHONY: all
 # generate all
 all:
 	make api;
 	make errors;
 	make config;
+	make generate;
 
 # show help
 help:
