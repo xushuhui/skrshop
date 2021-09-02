@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package cart.v1;
+package shop.v1;
 import "errors/errors.proto";
 
 

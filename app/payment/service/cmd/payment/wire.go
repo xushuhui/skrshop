@@ -5,11 +5,12 @@
 package main
 
 import (
-	"skrshop/internal/biz"
-	"skrshop/internal/conf"
-	"skrshop/internal/data"
-	"skrshop/internal/server"
-	"skrshop/internal/service"
+	"skrshop/app/payment/service/internal/biz"
+	"skrshop/app/payment/service/internal/conf"
+	"skrshop/app/payment/service/internal/data"
+	"skrshop/app/payment/service/internal/server"
+	"skrshop/app/payment/service/internal/service"
+
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"

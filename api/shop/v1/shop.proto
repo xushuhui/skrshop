@@ -1,21 +1,22 @@
 syntax = "proto3";
 
-package cart.v1;
+package shop.v1;
 
 import "google/api/annotations.proto";
 
-option go_package = "skrshop/api/cart/v1;v1";
-
+option go_package = "skrshop/api/shop/v1;v1";
+option java_multiple_files = true;
 
 
 // The greeting service definition.
-service Cart {
+service Payment {
   rpc SayHello (HelloRequest) returns (HelloReply)  {
     option (google.api.http) = {
       get: "/helloworld",
     };
   }
 }
+
 message HelloRequest {
   string name = 1;
 }

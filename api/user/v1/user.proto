@@ -4,7 +4,7 @@ package user.v1;
 
 import "google/api/annotations.proto";
 
-option go_package = "github.com/go-kratos/service-layout/api/account/v1;v1";
+option go_package = "skrshop/api/user/v1;v1";
 option java_multiple_files = true;
 
 
@@ -15,25 +15,7 @@ service User {
       get: "/helloworld",
     };
   }
-  // Sends a greeting
-  rpc SignUp (SignUpRequest) returns (SignUpReply)  {
-    option (google.api.http) = {
-      post: "/signup",
-      body: "*"
-    };
-  }
-  rpc SignIn(SignInRequest) returns (SignInReply){
-    option (google.api.http) = {
-      post: "/signin",
-      body: "*"
-    };
-  }
-  rpc Auth(AuthRequest) returns (AuthReply){
-    option (google.api.http) = {
-      post: "/auth",
-      body: "*"
-    };
-  }
+
 }
 message AuthRequest{
   string type = 1;
