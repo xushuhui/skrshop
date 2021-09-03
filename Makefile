@@ -49,6 +49,11 @@ build:
 generate:
 	go generate ./...
 
+.PHONY: ent
+# generate ent file
+ent:
+	ent generate  --idtype int64 ./app/shop/interface/internal/data/ent/schema/
+
 .PHONY: all
 # generate all
 all:
