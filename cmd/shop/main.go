@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"os"
-	"skrshop/app/payment/service/internal/conf"
+	"skrshop/internal/conf"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -64,6 +64,7 @@ func main() {
 	}
 
 	var bc conf.Bootstrap
+
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}

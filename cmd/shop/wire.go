@@ -5,16 +5,15 @@
 package main
 
 import (
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/google/wire"
 	"skrshop/app/shop/interface/internal/biz"
 	"skrshop/app/shop/interface/internal/conf"
 	"skrshop/app/shop/interface/internal/data"
 	"skrshop/app/shop/interface/internal/server"
 	"skrshop/app/shop/interface/internal/service"
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/google/wire"
 )
-
 
 // initApp init kratos application.
 func initApp(*conf.Server, *conf.Data, log.Logger) (*kratos.App, func(), error) {
