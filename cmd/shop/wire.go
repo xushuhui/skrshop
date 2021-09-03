@@ -8,11 +8,11 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
-	"skrshop/app/shop/interface/internal/biz"
-	"skrshop/app/shop/interface/internal/conf"
-	"skrshop/app/shop/interface/internal/data"
-	"skrshop/app/shop/interface/internal/server"
-	"skrshop/app/shop/interface/internal/service"
+	"skrshop/internal/biz"
+	"skrshop/internal/conf"
+	"skrshop/internal/data"
+	"skrshop/internal/server"
+	"skrshop/internal/service"
 )
 
 // initApp init kratos application.
