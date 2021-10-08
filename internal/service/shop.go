@@ -11,11 +11,12 @@ import (
 type ShopService struct {
 	v1.UnimplementedShopServer
 
-	bc  *biz.BannerUsecase
+	bc *biz.ShowUsecase
+
 	log *log.Helper
 }
 
 // NewGreeterService new a greeter service.
-func NewShopService(bc *biz.BannerUsecase, logger log.Logger) *ShopService {
+func NewShopService(bc *biz.ShowUsecase, logger log.Logger) *ShopService {
 	return &ShopService{bc: bc, log: log.NewHelper(logger)}
 }
